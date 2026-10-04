@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#eff2ed">
+  <meta name="description" content="手机上的个人体能日志：每日状态、训练消耗、摄入估算与可编辑动作库。">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>FORM · 体能日志</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./data.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <aside class="sidebar">
+    <a class="brand" href="#today" aria-label="FORM 体能日志首页"><span class="brand-mark" aria-hidden="true">f.</span><span>FORM<small>体能日志</small></span></a>
+    <p class="nav-label">你的训练日常</p>
+    <nav class="primary-nav" aria-label="主要导航">
+      <button type="button" data-view="today" aria-current="page"><span data-icon="dashboard"></span><span>今日</span></button>
+      <button type="button" data-view="library"><span data-icon="dumbbell"></span><span>动作库</span></button>
+      <button type="button" data-view="history"><span data-icon="trend"></span><span>趋势</span></button>
+    </nav>
+    <div class="sidebar-bottom"><span class="small-label">ONE DAY AT A TIME</span><p>积累记录，看见变化。</p><button class="text-button" type="button" data-action="settings"><span data-icon="archive"></span>数据与备份</button></div>
+  </aside>
+
+  <main id="main" tabindex="-1">
+    <header class="topbar"><a class="mobile-brand" href="#today">f.<span>FORM</span></a><span class="desktop-label">PERSONAL TRAINING JOURNAL</span><button class="icon-button" type="button" data-action="settings" aria-label="数据与备份"><span data-icon="archive"></span></button></header>
+    <div id="storage-alert" class="alert" role="alert" hidden></div>
+    <div id="day-alert" class="alert" role="status" hidden></div>
+
+    <section id="view-today" class="view" aria-labelledby="today-title">
+      <div class="page-heading"><div><p class="eyebrow">DAILY CHECK-IN</p><h1 id="today-title">今日状态<span class="accent-dot">.</span></h1></div><span id="record-badge" class="status-badge">待记录</span></div>
+      <div class="date-bar"><button type="button" class="icon-button" id="previous-day" aria-label="前一天"><span data-icon="chevronLeft"></span></button><label class="date-input-wrap"><span class="sr-only">记录日期</span><input type="date" id="record-date" required></label><button type="button" class="icon-button" id="next-day" aria-label="后一天"><span data-icon="chevronRight"></span></button><button type="button" class="text-button today-shortcut" id="back-today">回到今天</button></div>
+      <div class="daily-layout">
+        <aside class="daily-overview">
+          <section class="summary-card" aria-labelledby="summary-title">
+            <div class="summary-top"><span class="small-label" id="summary-title">每日概览</span><span data-icon="pulse"></span></div>
+            <div class="summary-headline"><div><p id="summary-caption">属于你的身体记录</p><strong id="summary-state">从今天开始</strong></div><div class="completion-ring" id="completion-ring"><span id="completion-value">0<span>/ 4</span></span></div></div>
+            <p class="summary-note" id="summary-note">按需填写，留空的项目不会记为 0。</p>
+            <div class="summary-metrics" id="summary-metrics"></div>
+            <button type="button" class="button primary compact" id="jump-to-form">开始记录</button>
+          </section>
+          <section class="week-card"><div class="section-line"><h2>最近七天</h2><span id="week-count" class="muted">0 天有记录</span></div><div id="week-strip" class="week-strip"></div></section>
+          <div class="local-note"><span data-icon="device"></span><p>记录保存在当前设备。<button type="button" class="inline-link" data-action="settings">定期备份</button>，换设备也能接着记。</p></div>
+        </aside>
+
+        <form id="daily-form" class="daily-form">
+          <section class="form-section" aria-labelledby="body-title"><div class="section-heading"><span class="section-icon" data-icon="body"></span><div><h2 id="body-title">身体基线</h2><p>尽量在相近的时间与条件下测量</p></div><span class="section-number">01</span></div><div class="field-grid body-grid">
+            <label class="field weight-field"><span>体重</span><div class="input-unit"><input name="weight" type="number" inputmode="decimal" min="20" max="400" step="any" placeholder="—"><span>kg</span></div></label>
+            <label class="field"><span>左手握力</span><div class="input-unit"><input name="gripLeft" type="number" inputmode="decimal" min="0" max="200" step="any" placeholder="—"><span>kg</span></div></label>
+            <label class="field"><span>右手握力</span><div class="input-unit"><input name="gripRight" type="number" inputmode="decimal" min="0" max="200" step="any" placeholder="—"><span>kg</span></div></label>
+          </div></section>
+
+          <section class="form-section" aria-labelledby="training-title"><div class="section-heading"><span class="section-icon" data-icon="dumbbell"></span><div><h2 id="training-title">训练与消耗</h2><p>记录今天做了什么</p></div><span class="section-number">02</span></div><fieldset class="training-fieldset"><legend>训练类型 <span class="muted">可多选</span></legend><div id="training-types" class="chip-group"></div></fieldset>
+            <div class="watch-label"><span data-icon="watch"></span><span>Apple Watch 数据 · 手动录入</span></div>
+            <div class="field-grid two-columns"><label class="field"><span>训练时长</span><div class="input-unit"><input name="duration" type="number" inputmode="decimal" min="0" max="1440" step="any" placeholder="—"><span>分钟</span></div></label><label class="field"><span>活动能量</span><div class="input-unit"><input name="activeEnergy" type="number" inputmode="decimal" min="0" max="30000" step="any" placeholder="—"><span>kcal</span></div></label></div>
+            <details class="extra-fields"><summary>补充手表数据 <span class="muted">选填</span></summary><div class="field-grid two-columns"><label class="field"><span>全天总消耗</span><div class="input-unit"><input name="totalEnergy" type="number" inputmode="decimal" min="0" max="30000" step="any" placeholder="—"><span>kcal</span></div></label><label class="field"><span>训练平均心率</span><div class="input-unit"><input name="avgHeartRate" type="number" inputmode="decimal" min="20" max="250" step="any" placeholder="—"><span>bpm</span></div></label></div><label class="field exertion-field"><span>训练努力程度</span><select name="exertion" id="exertion"><option value="">未记录</option></select></label><p class="field-help">全天总消耗包含活动能量与静息能量，不与活动能量重复相加。</p></details>
+          </section>
+
+          <section class="form-section" aria-labelledby="fatigue-title"><div class="section-heading"><span class="section-icon" data-icon="battery"></span><div><h2 id="fatigue-title">身体感受</h2><p>今天整体有多疲劳？</p></div><span class="section-number">03</span></div><input type="hidden" name="fatigue" id="fatigue"><div id="fatigue-scale" class="fatigue-scale" role="group" aria-label="疲劳等级，1 到 10"></div><div class="scale-labels"><span>1 · 轻松</span><span id="fatigue-label">尚未记录</span><span>10 · 非常疲劳</span></div><label class="field notes-field"><span>状态备注 <span class="muted">选填</span></span><textarea name="notes" rows="2" maxlength="3000" placeholder="睡眠、酸痛，或今天想记住的一件事…"></textarea></label></section>
+
+          <section class="form-section" aria-labelledby="nutrition-title"><div class="section-heading"><span class="section-icon" data-icon="bowl"></span><div><h2 id="nutrition-title">摄入估算</h2><p>大致记录就好，不必精确到每一口</p></div><span class="section-number">04</span></div><label class="field"><span>全天摄入估算</span><div class="input-unit"><input name="intake" type="number" inputmode="decimal" min="0" max="30000" step="any" placeholder="—"><span>kcal</span></div></label><details class="extra-fields" id="meal-details"><summary>按餐估算 <span class="muted">辅助加总</span></summary><div id="meal-rows"></div><div class="section-line"><button class="text-button" id="add-meal" type="button"><span data-icon="plus"></span>添加一餐</button><span id="meal-total" class="meal-total">尚未填写</span></div><p class="field-help">全天估算留空时，使用各餐合计；填写全天估算后优先使用该数值。</p></details></section>
+          <div id="form-error" class="form-error" role="alert" hidden></div>
+          <div class="save-bar"><span id="save-status">填写任意一项即可保存</span><button class="button primary" id="save-record" type="submit"><span data-icon="check"></span>保存记录</button></div>
+          <div class="delete-record-row"><button type="button" id="delete-record" class="text-button danger" hidden>删除这一天的记录</button></div>
+        </form>
+      </div>
+    </section>
+
+    <section id="view-library" class="view" aria-labelledby="library-title" hidden><div class="page-heading"><div><p class="eyebrow">MOVEMENT LIBRARY</p><h1 id="library-title">动作库<span class="accent-dot">.</span></h1></div><button class="button primary compact" id="new-exercise" type="button"><span data-icon="plus"></span>新动作</button></div><p class="page-description">把你的训练动作、演示和笔记放在一起。</p><div class="library-toolbar"><label class="search-box"><span data-icon="search"></span><input type="search" id="exercise-search" placeholder="搜索动作或器械" aria-label="搜索动作或器械"></label><button id="favorite-filter" class="icon-button" type="button" aria-label="仅显示收藏动作" aria-pressed="false"><span data-icon="bookmark"></span></button></div><div id="category-filters" class="category-filters" aria-label="动作分类"></div><div class="section-line library-count"><span id="exercise-count" class="muted"></span><span class="small-label">你的动作，全在这里</span></div><div id="exercise-grid" class="exercise-grid"></div></section>
+
+    <section id="view-history" class="view" aria-labelledby="history-title" hidden><div class="page-heading"><div><p class="eyebrow">YOUR PROGRESS</p><h1 id="history-title">记录与趋势<span class="accent-dot">.</span></h1></div><span class="status-badge" id="total-days">0 天记录</span></div><div class="trend-card"><div class="chart-toolbar"><label><span class="sr-only">趋势指标</span><select id="trend-metric"><option value="weight">体重 · kg</option><option value="grip">握力最高值 · kg</option><option value="activeEnergy">活动能量 · kcal</option><option value="intake">摄入估算 · kcal</option><option value="fatigue">疲劳等级 · /10</option></select></label><div class="range-selector" aria-label="趋势时间范围"><button type="button" data-range="7" aria-pressed="true">7 天</button><button type="button" data-range="30" aria-pressed="false">30 天</button><button type="button" data-range="90" aria-pressed="false">90 天</button></div></div><div id="trend-summary" class="trend-summary"></div><div id="trend-chart" class="trend-chart"></div><p class="field-help">仅显示已记录数据；握力取当天左右手中的最高值。</p></div><div class="section-line history-heading"><h2>每日记录</h2><span class="muted">点击查看或修改</span></div><div id="history-list" class="history-list"></div></section>
+    <footer class="page-footer">FORM <span>·</span> 积累每一个日常</footer>
+  </main>
+
+  <dialog id="exercise-dialog" class="sheet"><form id="exercise-form"><div class="sheet-header"><div><p class="eyebrow">MOVEMENT</p><h2 id="exercise-dialog-title">动作详情</h2></div><button type="button" class="icon-button" data-close="exercise-dialog" aria-label="关闭动作详情"><span data-icon="close"></span></button></div><div class="sheet-body"><div id="exercise-media" class="exercise-media"></div><input id="exercise-id" type="hidden"><label class="field"><span>动作名称</span><input id="exercise-name" required maxlength="120" placeholder="例如：杠铃深蹲"></label><div class="field-grid two-columns"><label class="field"><span>分类</span><select id="exercise-category"></select></label><label class="field"><span>器械</span><input id="exercise-equipment" maxlength="120" placeholder="例如：杠铃"></label></div><label class="field"><span>动作笔记</span><textarea id="exercise-description" rows="3" maxlength="2000" placeholder="你的动作要点、训练笔记…"></textarea></label><details class="media-settings" id="media-settings"><summary><span data-icon="film"></span>GIF 与视频</summary><label class="field"><span>GIF / 图片地址</span><input id="exercise-gif" type="text" inputmode="url" maxlength="2048" placeholder="assets/media/squat.gif"></label><label class="field"><span>视频文件地址</span><input id="exercise-video" type="text" inputmode="url" maxlength="2048" placeholder="assets/media/squat.mp4"></label><p class="field-help">可以使用媒体文件直链，或放入项目 assets/media 文件夹后填写相对路径。这里的编辑保存在当前设备，记得导出备份。</p></details><div id="exercise-error" class="form-error" role="alert" hidden></div></div><div class="sheet-footer"><button type="button" class="text-button danger" id="delete-exercise">删除动作</button><button type="submit" class="button primary">保存动作</button></div></form></dialog>
+
+  <dialog id="settings-dialog" class="sheet settings-sheet"><div class="sheet-header"><div><p class="eyebrow">YOUR DATA</p><h2>数据与备份</h2></div><button type="button" class="icon-button" data-close="settings-dialog" aria-label="关闭数据与备份"><span data-icon="close"></span></button></div><div class="sheet-body"><div class="settings-intro"><span data-icon="device"></span><h3>你的记录，留在你的设备</h3><p>每日状态、动作编辑与收藏保存在当前浏览器。更换设备或浏览器需要导入备份；清除网站数据会移除本地记录。</p></div><div class="backup-summary" id="backup-summary"></div><button type="button" class="settings-action" id="export-data"><span data-icon="download"></span><span><strong>导出备份</strong><small>保存完整的 JSON 数据文件</small></span><span data-icon="chevronRight"></span></button><button type="button" class="settings-action" id="import-data"><span data-icon="upload"></span><span><strong>导入备份</strong><small>合并记录，遇到重复内容时由你决定</small></span><span data-icon="chevronRight"></span></button><input id="import-file" type="file" accept=".json,application/json" hidden><div id="import-error" class="form-error" role="alert" hidden></div><div class="info-note"><span data-icon="watch"></span><p>Apple Watch 指标目前需手动填写。本网页不会自动读取 Apple 健康数据，也不会将你的健康记录上传至 GitHub。</p></div></div><div class="sheet-footer"><span class="muted">FORM · 体能日志</span><button type="button" class="button secondary" data-close="settings-dialog">完成</button></div></dialog>
+
+  <dialog id="confirm-dialog" class="confirm-dialog"><form method="dialog"><h2 id="confirm-title">确认操作</h2><p id="confirm-message"></p><div class="confirm-actions"><button value="cancel" class="button secondary" id="confirm-cancel">取消</button><button value="confirm" class="button primary" id="confirm-ok">确认</button></div></form></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <noscript><div class="noscript">请启用 JavaScript，以使用记录、动作库和本地备份功能。</div></noscript>
+</body>
+</html>
