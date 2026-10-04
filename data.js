@@ -32,7 +32,7 @@
 
   const STORAGE_KEY = "fitness-tracker:v1";
   const TRAINING_TYPES = Object.freeze([
-    "力量训练", "跑步", "骑行", "游泳", "间歇训练", "步行", "灵活性训练", "其他", "休息"
+    "足球", "力量训练", "跑步", "骑行", "游泳", "间歇训练", "步行", "灵活性训练", "其他", "休息"
   ]);
   const CATEGORIES = Object.freeze(["胸部", "背部", "肩部", "腿部", "手臂", "核心", "全身", "灵活性"]);
   const RECORD_KEYS = [
